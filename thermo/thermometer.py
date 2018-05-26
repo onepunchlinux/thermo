@@ -23,6 +23,7 @@ class Thermometer(object):
         ]
 
     def __getitem__(self, field):
+        field = inflection.underscore(field)
         if field == 'id':
             return self.id
         elif field == 'name':
@@ -41,6 +42,7 @@ class Thermometer(object):
             raise InvalidInputError('property ' + field + ' does not exist')
 
     def __setitem__(self, field, val):
+        field = inflection.underscore(field)
         if field == 'name':
             self.name = val
         elif field == 'operating_mode':
