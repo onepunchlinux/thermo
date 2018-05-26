@@ -63,3 +63,19 @@ class TestStringMethods(unittest.TestCase):
         invalid_mode = 'foo'
         assert_that(calling(setattr).with_args(self.therm, 'fan_mode', invalid_mode),
                     raises(InvalidInputError))
+
+    def test_setting_nonexistant_property_raise_error(self):
+        try:
+            self.therm['foo'] = 'foo'
+        except InvalidInputError: 
+            pass
+        else:
+            fail
+
+    def test_getting_nonexistant_property_raise_error(self):
+        try:
+            self.therm['foo']
+        except InvalidInputError: 
+            pass
+        else:
+            fail

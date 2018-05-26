@@ -1,6 +1,7 @@
 import random
 import json
 from errors import InvalidInputError
+import inflection
 
 class Thermometer(object):
     def __init__(self, counter, meter):
@@ -36,6 +37,8 @@ class Thermometer(object):
             return self.heat_point
         elif field == 'fan_mode':
             return self.fan_mode
+        else:
+            raise InvalidInputError('property ' + field + ' does not exist')
 
     def __setitem__(self, field, val):
         if field == 'name':
@@ -48,12 +51,14 @@ class Thermometer(object):
             self.heat_point = val
         elif field == 'fan_mode':
             self.fan_mode = val
+        else:
+            raise InvalidInputError('property ' + field + ' can\'t be updated')
 
     def merge(self, obj):
-        for field in writable_fields:
+        for field in self.writable_fields:
             val = obj.get(inflection.camelize(field, False))
             if val != None:
-                thermo[field] = val
+                self[field] = val
         
 
     @property

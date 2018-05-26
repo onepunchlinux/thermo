@@ -1,4 +1,6 @@
 from thermometer import Thermometer, counter, FluxMeter
+from errors import InvalidInputError
+
 class Store(object):
     def __init__(self):
 
@@ -11,3 +13,11 @@ class Store(object):
             thermos[thermo.id] = thermo
 
         self.thermos = thermos
+
+    def find(self, id):
+        try:
+            return self.thermos[id]
+        except:
+            raise InvalidInputError('thermometer doesn\'t exist')
+        
+
