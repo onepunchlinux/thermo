@@ -8,7 +8,7 @@ class Thermometer(object):
         init_id = counter.next()
         self.id = init_id
         self.name = 'thermometer' + str(init_id)
-        self.current_temp = meter.temp
+        self.meter = meter
         self.operating_mode = 'cool'
         self.cool_point = 72
         self.heat_point = 72
@@ -103,6 +103,9 @@ class Thermometer(object):
         else:
             raise InvalidInputError('fan mode must be one of ' + " ".join(valid_modes))
 
+    @property
+    def current_temp(self):
+        return self.meter.temp
 
 class ThermometerEncoder(json.JSONEncoder):
     def default(self, obj):
