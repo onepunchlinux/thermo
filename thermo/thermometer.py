@@ -13,6 +13,49 @@ class Thermometer(object):
         self.heat_point = 72
         self.fan_mode = 'auto'
 
+        self.writable_fields = [
+            'name',
+            'operating_mode',
+            'cool_point',
+            'heat_point',
+            'fan_mode'
+        ]
+
+    def __getitem__(self, field):
+        if field == 'id':
+            return self.id
+        elif field == 'name':
+            return self.name
+        elif field == 'current_temp':
+            return self.current_temp
+        elif field == 'operating_mode':
+            return self.operating_mode
+        elif field == 'cool_point':
+            return self.cool_point
+        elif field == 'heat_point':
+            return self.heat_point
+        elif field == 'fan_mode':
+            return self.fan_mode
+
+    def __setitem__(self, field, val):
+        if field == 'name':
+            self.name = val
+        elif field == 'operating_mode':
+            self.operating_mode = val
+        elif field == 'cool_point':
+            self.cool_point = val
+        elif field == 'heat_point':
+            self.heat_point = val
+        elif field == 'fan_mode':
+            self.fan_mode = val
+
+    def merge(self, obj):
+        for field in writable_fields:
+            val = obj.get(inflection.camelize(field, False))
+            if val != None:
+                thermo[field] = val
+        
+
     @property
     def operating_mode(self):
         return self.__operating_mode

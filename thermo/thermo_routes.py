@@ -6,17 +6,19 @@ from errors import InvalidInputError
 from store import Store
 
 urls = (
-    '/', 'Thermometers',
-    '/(.+)', 'ThermometerById'
+    '', 'Thermometers',
+    '/([0-0]+)', 'Thermometer',
+    '/([0-9]+)/([a-zA-Z0-9]+)', 'ThermometerFields'
 )
 
 store = Store()
 
 class Thermometers:
     def GET(self):
-        return json.dumps(store.thermos, cls=ThermometerEncoder)
+        return json.dumps({'data': store.thermos}, cls=ThermometerEncoder)
 
-class ThermometerById:
+
+class Thermometer:
     def GET(self, thermoId):
         thermo = store.thermos.get(int(thermoId))
 
@@ -24,25 +26,18 @@ class ThermometerById:
 
     def PUT(self, thermoId):
         thermo = store.thermos.get(int(thermoId))
-        data = json.loads(web.data())
-
-        writable_fields = [
-            'name',
-            'operatingMode',
-            'coolPoint',
-            'heatPoint',
-            'fanMode'
-        ]
-
-        for field in writable_fields:
-            update_or_not(thermo, inflection.underscore(field), data.get(field))
+        body = json.loads(web.data())
+        if 'data' in body:
+            thermo.merge(body['data'])
+        elif 'key' in body and 'value' in body:
+            thermo[body['key']] = body['value']
 
         return json.dumps({ 'msg': 'success' })
 
 
-def update_or_not(obj, obj_key, val):
-    if val != None:
-        setattr(obj, obj_key, val)
-    return
+class ThermometerFields:
+    def GET(self, thermoId, field):
+        thermo = store.thermos.get(int(thermoId))
+        return json.dumps({'data': thermo[field]})
 
 app = web.application(urls, locals())
