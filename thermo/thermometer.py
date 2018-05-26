@@ -1,5 +1,6 @@
 import random
-from Errors import InvalidInputError
+import json
+from errors import InvalidInputError
 
 class Thermometer(object):
     def __init__(self, counter, meter):
@@ -53,6 +54,23 @@ class Thermometer(object):
             raise InvalidInputError('fan mode must be one of ' + " ".join(valid_modes))
 
 
+class ThermometerEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Thermometer):
+            return {
+                'id': obj.id,
+                'name': obj.name,
+                'currentTemp': obj.current_temp,
+                'operatingMode': obj.operating_mode,
+                'coolPoint': obj.cool_point,
+                'heatPoint': obj.heat_point,
+                'fanMode': obj.fan_mode
+            }
+        else:
+            return super(ThermometerEncoder, self).default(obj)
+            
+
+
 class DeadMeter:
     def __init__(self, t):
         self.temp = t
@@ -75,7 +93,7 @@ class FluxMeter:
 
     @property
     def temp(self):
-        return random.randint(min_temp, max_temp)
+        return random.randint(self.min_temp, self.max_temp)
 
 
 def counter(n):

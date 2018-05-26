@@ -1,7 +1,7 @@
 import unittest
 from hamcrest import *
 from thermo.thermometer import Thermometer, counter, DeadMeter
-from thermo.Errors import InvalidInputError
+from thermo.errors import InvalidInputError
 
 class TestStringMethods(unittest.TestCase):
 
