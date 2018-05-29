@@ -1,6 +1,5 @@
 import unittest
 from hamcrest import *
-from thermo.lib import *
 from thermo.thermo_routes import app
 from nose.tools import *
 from paste.fixture import TestApp
